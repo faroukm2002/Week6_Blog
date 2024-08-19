@@ -1,13 +1,14 @@
 import express from 'express';
 import { addNotes, deleteNotes, getAllNotes, getUserNotes, updateNotes } from './notes.controller.js';
+import { auth } from '../../middleware/auth.js';
 
 
 const notesRouter=express.Router();
 
-notesRouter.post('/',addNotes);
-notesRouter.put('/',updateNotes);
-notesRouter.delete('/',deleteNotes);
-notesRouter.get('/',getAllNotes);
+notesRouter.post('/',auth,addNotes);
+notesRouter.put('/',auth,updateNotes);
+notesRouter.delete('/',auth,deleteNotes);
+notesRouter.get('/',auth,getAllNotes);
 notesRouter.get('/:createdBy',getUserNotes);
 
 

@@ -1,21 +1,11 @@
 import notesModel from '../../../database/models/notes.model.js';
-import jwt from 'jsonwebtoken';
 const addNotes = async (req, res) => {
-    const {token}=req.headers ('token')
+    const {token}=req.headers 
     const { title, description, createdBy } = req.body;
-    jwt.verify(token,process.env.SECRET_KEY,async (err, decoded) => {
-        if (err) {
-            res.json({message:"Invalid token"})
+    jwt
+    const notes =await notesModel.insertMany({ title, description, createdBy })
 
-        }
-        else{
-            const notes =await notesModel.insertMany({ title, description, createdBy })
-
-            res.json({message:"success", notes})
-        }
-    })
-
-   
+    res.json({message:"success", notes})
     
 }
 const updateNotes = async (req, res) => {
@@ -42,22 +32,12 @@ const deleteNotes = async (req, res) => {
 
 
 
-
 const getAllNotes = async (req, res) => {
-    const { token } = req.headers("token");
 
-  
-    jwt.verify(token, process.env.SECRET_KEY, async (err, decoded) => {
-        if (err) {
-            return res.status(401).json({ message: "Invalid token" });
-        } else {
-                const notes = await notesModel.find({}).populate('createdBy', 'name -_id');
-                res.json({ message: "success", notes });
-        }
-    });
+    const notes = await notesModel.find({}).populate('createdBy','name -_id');
+    
+    res.json({ message: "success", notes });
 }
-
-
 
 const getUserNotes = async (req, res) => {
     const{createdBy} = req.params
