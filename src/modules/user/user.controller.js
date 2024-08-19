@@ -1,21 +1,36 @@
+import bcrypt from 'bcrypt';
 import userModel from "../../../database/models/user.model.js"
-import  bcrypt, { hash }  from 'bcrypt';
 
+const signUp = async (req, res) => {
+    const { name, email, password } = req.body;
 
-const sighUp=async (req,res)=>{
+    const user = await userModel.findOne({ email });
+    if (user) return res.json({ message: 'User already exists' });
 
-    const {name,email,password} = req.body
+    const hash = bcrypt.hashSync(password, parseInt(process.env.SALTROUND_KEY));
+    await userModel.insertMany({ name, email, password: hash });
 
-    const user =await userModel.findOne({email})
-    if(user) return res.json({messageL: 'user already exists'})
-        const  hash =bcrypt.hashSync(password, parseInt(process.env.SALTROUND_KEY))
-
-    await userModel.insertMany({name,email,password:hash})
-res.json({messageL: 'success'})
-
+    res.json({ message: 'Success' });
 }
 
-export{
+const signIn = async (req, res) => {
+    const { email, password } = req.body;
 
-    sighUp 
+    const user = await userModel.findOne({ email });
+
+    if (user) {
+        let match = bcrypt.compareSync(password, user.password);
+        if (match) {
+            res.json({ message: 'Login successful with token' });
+        } else {
+            res.json({ message: 'Password incorrect' });
+        }
+    } else {
+        res.json({ message: 'User not found' });
+    }
+}
+
+export {
+    signUp,
+    signIn
 }
