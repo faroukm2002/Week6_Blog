@@ -33,8 +33,8 @@ const deleteNotes = async (req, res) => {
 
 const getAllNotes = async (req, res) => {
 
-    const notes = await notesModel.find({}
-    );
+    const notes = await notesModel.find({}).populate('createdBy','name -_id');
+    
     res.json({ message: "success", notes });
 }
 
