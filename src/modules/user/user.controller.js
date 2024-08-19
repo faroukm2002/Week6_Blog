@@ -18,15 +18,10 @@ const signIn = async (req, res) => {
 
     const user = await userModel.findOne({ email });
 
-    if (user) {
-        let match = bcrypt.compareSync(password, user.password);
-        if (match) {
-            res.json({ message: 'Login successful with token' });
-        } else {
+    if (user && bcrypt.compareSync(password, user.password)) {
             res.json({ message: 'Password incorrect' });
-        }
     } else {
-        res.json({ message: 'User not found' });
+        res.json({ message: 'User not found or Password Incorrect' });
     }
 }
 
