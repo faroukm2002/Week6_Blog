@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const notesSchema =mongoose.Schema({
     title:String,
     description:String,
-    cratedBy:mongoose.SchemaTypes.ObjectId,
+    createdBy:mongoose.SchemaTypes.ObjectId,
 })
 
 const notesModel=mongoose.model('notes',notesSchema);
